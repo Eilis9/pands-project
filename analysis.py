@@ -52,7 +52,7 @@ def summary_stats(data, vars, filename='summary/variable_summary.txt'):
 def plot_histograms(data, vars):   
     for var in vars:
         plt.figure()
-        sns.histplot(data=data, x=var, hue="Class")
+        sns.histplot(data=data, x=var, hue="Class", binwidth=0.2, kde=True)
         plt.savefig(f'plots/histogram_{var}.png')  
 
 
@@ -60,7 +60,7 @@ def plot_histograms(data, vars):
 # call summary_stats to write a file which summarises the data
 # returns a dataframe of the summary stats
 data_wo_class = data[variables[:-1]]
-print(data_wo_class.head())
+#print(data_wo_class.head())
 summary_stats_df = summary_stats(data[variables[:-1]], variables[:-1])
 summary_stats_df.to_csv("summary/summary of stats.csv")
 plot_histograms(data, variables[:-1])
@@ -94,8 +94,8 @@ bin_size = 0.2
 #print(all_min, min_petallength)
 
 min_PL = all_min["Petal Length"]
-print("ALL MIN", all_min)
-print("min_PL", min_PL)
+#print("ALL MIN", all_min)
+#print("min_PL", min_PL)
 
 #bins = np.arange(math.floor(all_min["Petal Length"]), math.ceil(all_max["Petal Length"])+1, bin_size)
 #print(min_data)

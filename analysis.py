@@ -31,19 +31,26 @@ ivers = data[data["Class"] == "Iris-versicolor"].iloc[:, 0:4]
 ivirg = data[data["Class"] == "Iris-verginica"].iloc[:, 0:4]
 
 
-
-#def variable_summary(data):
-all_min = data.min()
-all_max = data.max() 
-all_mean = data.mean()
-all_stdev = data.std()
-
-for col in columns[:-1]:
-    filename = f'summary/{col}.txt'
+def summary_stats(data, vars, filename='summary/variable_summary.txt'):
+    # Get some overall basic stats on the whole dataset
+    all_min = data.min()
+    all_max = data.max() 
+    all_mean = data.mean()
+    all_median = data.median()
+    all_stdev = data.std()
+    # Write some summary files for the basic stats
     with open (filename, 'wt') as f:
-        f.write(f' Min (cm), Max (cm), Mean (cm), Standard Deviation (cm)\n')
-        f.write(f'{round(all_min[col], 4)}, {round(all_max[col],4) }, {round(all_mean[col],4)}, {round(all_stdev[col],4)}')
-                
+        f.write(f'Variable, Min (cm), Max (cm), Mean (cm), Median(cm), Standard Deviation (cm)\n')
+        for var in vars:           
+            f.write(f'{var}, {round(all_min[var], 4)}, {round(all_max[var],4) }, ')
+            f.write(f'{round(all_mean[var],4)}, {round(all_median[var],4)}, {round(all_stdev[var],4)}\n')
+        
+
+
+
+# call summary_stats to write a file which summarises the data
+summary_stats(data, columns[:-1])
+
 
 
 #sns.relplot(data=iseto, x="Sepal Length", y="Sepal Width")

@@ -9,8 +9,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import math
-sns.set_theme()
 
+
+sns.set_theme()
 # Read in the data from the source file - no header  
 data = pd.read_csv('data\iris.data', header=None)
 # List the column/variable names
@@ -28,6 +29,21 @@ class_names = data["Class"].unique()
 iseto = data[data["Class"] == "Iris-setosa"].iloc[:, 0:4]
 ivers = data[data["Class"] == "Iris-versicolor"].iloc[:, 0:4]
 ivirg = data[data["Class"] == "Iris-verginica"].iloc[:, 0:4]
+
+
+
+#def variable_summary(data):
+all_min = data.min()
+all_max = data.max() 
+all_mean = data.mean()
+all_stdev = data.std()
+
+for col in columns[:-1]:
+    filename = f'summary/{col}.txt'
+    with open (filename, 'wt') as f:
+        f.write(f' Min (cm), Max (cm), Mean (cm), Standard Deviation (cm)\n')
+        f.write(f'{round(all_min[col], 4)}, {round(all_max[col],4) }, {round(all_mean[col],4)}, {round(all_stdev[col],4)}')
+                
 
 
 #sns.relplot(data=iseto, x="Sepal Length", y="Sepal Width")

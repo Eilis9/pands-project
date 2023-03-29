@@ -1,0 +1,19 @@
+Project Plan (Eilis Donohue PANDS project):
+
+1. Look at the literature about the dataset
+	a. Lit review - about, origins, etc. Also the significance of it to DA?
+
+2. Do the minimum analysis
+	a. Perform the minimum analysis min, max etc 
+	b. Tidy up the output to file with some .rjust() string formatting etc
+	c. Do some basic plots - histograms, the plot matrix (seaborn)
+	
+3. Further analysis
+	a. Try to recreate the Fischer analysis, solving for alpha parameters?
+	b. Do some numpy stat analysis. Variance should prob be included in 1.
+	c. Look at some other papers for inspo?
+	d. Create some 3D plots?
+	 
+
+
+

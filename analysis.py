@@ -11,6 +11,54 @@ import numpy as np
 import math
 
 
+
+def summary_stats(data, vari, filename='summary/variable_summary.txt'):
+    # Get some overall basic stats on the whole dataset
+    all_min = data.min()
+    all_max = data.max() 
+    all_mean = data.mean()
+    all_median = data.median()
+    all_stdev = data.std()
+    # Write some summary files for the basic stats
+    with open (filename, 'wt') as f:
+        # Write file header
+        f.write(f'Variable, Min (cm), Max (cm), Mean (cm), Median(cm), Standard Deviation (cm)\n')
+        # for each variable write a new line
+        for var in vari:           
+            f.write(f'{str(var).ljust(20)}){str(round(all_min[var], 4)).rjust(20)}, {str(round(all_max[var],4)).rjust(20)}, ')
+            f.write(f'{round(all_mean[var],4)}, {round(all_median[var],4)}, {round(all_stdev[var],4)}\n')
+    summary_stats_df = pd.concat([all_min, all_max, all_mean, all_median, all_stdev], axis=1)
+    return summary_stats_df
+
+
+def describe_df(df, class_item):
+    return data[data["Class"] == class_item].describe()
+    
+
+#for item in class_names:
+#    summary = describe_df(data, item)
+ #   summary.to_csv(item +'.txt')
+
+
+
+
+#print(iseto)
+#sepal_width_mean = data["Sepal Width"].mean()
+#print(data.count(axis=0))
+#data.mean()
+#print(data)
+
+
+
+
+def plot_histograms(data, vars1):   
+    for var in vars1:
+        plt.figure()
+        sns.histplot(data=data, x=var, hue="Class", binwidth=0.2, kde=True)
+        plt.savefig(f'plots/histogram_{var}.png')  
+
+
+#def main():
 sns.set_theme()
 # Read in the data from the source file - no header  
 data = pd.read_csv('data\iris.data', header=None)
@@ -31,31 +79,6 @@ class_names = data["Class"].unique()
 #ivirg = data[data["Class"] == "Iris-verginica"].iloc[:, 0:4]
 
 
-def summary_stats(data, vars, filename='summary/variable_summary.txt'):
-    # Get some overall basic stats on the whole dataset
-    all_min = data.min()
-    all_max = data.max() 
-    all_mean = data.mean()
-    all_median = data.median()
-    all_stdev = data.std()
-    # Write some summary files for the basic stats
-    with open (filename, 'wt') as f:
-        # Write file header
-        f.write(f'Variable, Min (cm), Max (cm), Mean (cm), Median(cm), Standard Deviation (cm)\n')
-        # for each variable write a new line
-        for var in vars:           
-            f.write(f'{var}, {round(all_min[var], 4)}, {round(all_max[var],4) }, ')
-            f.write(f'{round(all_mean[var],4)}, {round(all_median[var],4)}, {round(all_stdev[var],4)}\n')
-    summary_stats_df = pd.concat([all_min, all_max, all_mean, all_median, all_stdev], axis=1)
-    return summary_stats_df
-
-def plot_histograms(data, vars):   
-    for var in vars:
-        plt.figure()
-        sns.histplot(data=data, x=var, hue="Class", binwidth=0.2, kde=True)
-        plt.savefig(f'plots/histogram_{var}.png')  
-
-
 
 # call summary_stats to write a file which summarises the data
 # returns a dataframe of the summary stats
@@ -69,7 +92,7 @@ plot_histograms(data, variables[:-1])
 for item in class_names:
     # Slice data to get just the data related to one class/iris
     iris_data = data[data["Class"] == item]
-    vars = variables[:-1]    
+    vari = variables[:-1]    
 #    summary_stats(iris_data, vars, filename=f'summary/{item}_summary.txt')
 
 
@@ -103,21 +126,10 @@ min_PL = all_min["Petal Length"]
 #sns.histplot(data=data, x="Petal Length", hue="Class", bins=bins, kde=True)
 #plt.savefig("plots/histplot.png")            
 
-def describe_df(df, class_item):
-    return data[data["Class"] == class_item].describe()
     
 
-
-
-#for item in class_names:
-#    summary = describe_df(data, item)
- #   summary.to_csv(item +'.txt')
+#if __name__ == "__main__":
+#    main()
 
 
 
-
-#print(iseto)
-#sepal_width_mean = data["Sepal Width"].mean()
-#print(data.count(axis=0))
-#data.mean()
-#print(data)

@@ -1,7 +1,7 @@
 '''
 PANDS Project 2023
 Fischer's Iris Dataset
-Author: Eilis Donohue
+Author: Eilis Donohue (G00006088)
 '''
 
 import pandas as pd
@@ -9,47 +9,32 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import math
+import os
 
+summary_filename = "Summary_Statistics.txt"
 
-
-def summary_stats(data, vari, filename='summary/variable_summary.txt'):
-    # Get some overall basic stats on the whole dataset
-    all_min = data.min()
-    all_max = data.max() 
-    all_mean = data.mean()
-    all_median = data.median()
-    all_stdev = data.std()
-    # Write some summary files for the basic stats
-    with open (filename, 'wt') as f:
-        # Write file header
-        f.write(f'Variable, Min (cm), Max (cm), Mean (cm), Median(cm), Standard Deviation (cm)\n')
-        # for each variable write a new line
-        for var in vari:           
-            f.write(f'{str(var).ljust(20)}){str(round(all_min[var], 4)).rjust(20)}, {str(round(all_max[var],4)).rjust(20)}, ')
-            f.write(f'{round(all_mean[var],4)}, {round(all_median[var],4)}, {round(all_stdev[var],4)}\n')
-    summary_stats_df = pd.concat([all_min, all_max, all_mean, all_median, all_stdev], axis=1)
-    return summary_stats_df
-
-
-def describe_df(df, class_item):
-    return data[data["Class"] == class_item].describe()
+# Function to calculate the basic statistics of the dataset
+def get_summary_stats(data, item=''):
+    # Get some basic stats 
+    summary_df = pd.DataFrame()
+    summary_df['Min (cm)'] = data.min()
+    summary_df['Max (cm)'] = data.max()
+    summary_df['Mean (cm)'] = data.mean()
+    summary_df['Median (cm)'] = data.median()
+    summary_df['StDev (cm)'] = data.std()
     
+    return summary_df
 
-#for item in class_names:
-#    summary = describe_df(data, item)
- #   summary.to_csv(item +'.txt')
-
-
-
-
-#print(iseto)
-#sepal_width_mean = data["Sepal Width"].mean()
-#print(data.count(axis=0))
-#data.mean()
-#print(data)
-
-
-
+def print_summary_stats(summary_filename, df_data, heading):
+    
+    with open (summary_filename, 'at') as f:
+        df_summary_asstr = df_data.to_string(float_format='%.2f', 
+                                                justify='center')
+        # to format the header nicely
+        filler = "*" * 2
+        f.write(f'{filler} {heading} {filler} \n')
+        f.write(f'{df_summary_asstr}\n')
+        f.write('\n')
 
 def plot_histograms(data, vars1):   
     for var in vars1:
@@ -58,42 +43,41 @@ def plot_histograms(data, vars1):
         plt.savefig(f'plots/histogram_{var}.png')  
 
 
-#def main():
-sns.set_theme()
-# Read in the data from the source file - no header  
-data = pd.read_csv('data\iris.data', header=None)
-# List the column/variable names
-variables = ["Sepal Length", "Sepal Width", "Petal Length",\
-           "Petal Width", "Class"]
 
-# Assign a header to the data
+# Read in the data from the source file - no header  
+data = pd.read_csv('data/iris.data', header=None)
+# Make a list of the columns
+variables = ["Sepal Length", "Sepal Width", "Petal Length",
+             "Petal Width", "Class"]
+
+# Assign the header to the data
 data.columns = variables
 
-#summary = data.describe()
+# get the different classifications
 
 class_names = data["Class"].unique()
-# Slice the dataframe to separate the Iris classes into separate dataframes
-# containing only the measurement data
-#iseto = data[data["Class"] == "Iris-setosa"].iloc[:, 0:4]
-#ivers = data[data["Class"] == "Iris-versicolor"].iloc[:, 0:4]
-#ivirg = data[data["Class"] == "Iris-verginica"].iloc[:, 0:4]
-
-
-
-# call summary_stats to write a file which summarises the data
-# returns a dataframe of the summary stats
 data_wo_class = data[variables[:-1]]
-#print(data_wo_class.head())
-summary_stats_df = summary_stats(data[variables[:-1]], variables[:-1])
-summary_stats_df.to_csv("summary/summary of stats.csv")
-plot_histograms(data, variables[:-1])
 
-# loop over each iris/class to call summary_stats and histo plots
+os.remove(f'summary/{summary_filename}')
+# get the statistics for the whole dataset
+df_summary_all = get_summary_stats(data.drop(columns="Class"))
+# print to file
+print_summary_stats(f'summary/{summary_filename}', df_summary_all, "All data")
+
+# Get summary statistics for each class of iris and print to csv
 for item in class_names:
-    # Slice data to get just the data related to one class/iris
-    iris_data = data[data["Class"] == item]
-    vari = variables[:-1]    
-#    summary_stats(iris_data, vars, filename=f'summary/{item}_summary.txt')
+    # Extract the data related to one class of iris
+    iris_data = data[data["Class"] == item].copy()
+    # Strip the class column before passing to function
+    iris_data.drop(columns = "Class", inplace=True) 
+    df_summary = get_summary_stats(iris_data)    
+    print_summary_stats(f'summary/{summary_filename}', df_summary, item)
+    
+
+        
+        
+plot_histograms(data, variables[:-1])
+        
 
 
 #sns.relplot(data=iseto, x="Sepal Length", y="Sepal Width")
@@ -126,7 +110,8 @@ min_PL = all_min["Petal Length"]
 #sns.histplot(data=data, x="Petal Length", hue="Class", bins=bins, kde=True)
 #plt.savefig("plots/histplot.png")            
 
-    
+    #def main():
+sns.set_theme()
 
 #if __name__ == "__main__":
 #    main()

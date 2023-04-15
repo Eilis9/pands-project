@@ -1,5 +1,0 @@
-Variable, Min (cm), Max (cm), Mean (cm), Median(cm), Standard Deviation (cm)
-Sepal Length, 4.3, 5.8, 5.006, 5.0, 0.3525
-Sepal Width, 2.3, 4.4, 3.418, 3.4, 0.381
-Petal Length, 1.0, 1.9, 1.464, 1.5, 0.1735
-Petal Width, 0.1, 0.6, 0.244, 0.2, 0.1072

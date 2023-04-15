@@ -1,2 +1,0 @@
- Min (cm), Max (cm), Mean (cm), Median(cm), Standard Deviation (cm)
-1.0, 6.9, 3.7587, 4.35, 1.7644

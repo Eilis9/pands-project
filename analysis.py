@@ -1,84 +1,123 @@
 '''
 PANDS Project 2023
-Fischer's Iris Dataset
+Fisher's Iris Dataset
 Author: Eilis Donohue (G00006088)
 '''
-
+import os
+import glob
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
 import numpy as np
 import math
-import os
+import matplotlib.pyplot as plt
+import seaborn as sns
 
-summary_filename = "Summary_Statistics.txt"
+summary_filename = "summary/summary_statistics.txt"
+corr_filename = "summary/correlation.txt"
 
-# Function to calculate the basic statistics of the dataset
+# ************************ Function definitions ***************************
+# Function to calculate the basic statistics of a dataset
 def get_summary_stats(data, item=''):
-    # Get some basic stats 
+    # Get the basic stats 
     summary_df = pd.DataFrame()
     summary_df['Min (cm)'] = data.min()
     summary_df['Max (cm)'] = data.max()
     summary_df['Mean (cm)'] = data.mean()
     summary_df['Median (cm)'] = data.median()
     summary_df['StDev (cm)'] = data.std()
-    
+   
     return summary_df
 
-def print_summary_stats(summary_filename, df_data, heading):
-    
+# Function to write a summary of data to a file 
+def write_to_file(summary_filename, df_data, heading, dec_format="%.2f"):   
     with open (summary_filename, 'at') as f:
-        df_summary_asstr = df_data.to_string(float_format='%.2f', 
+        # to_string for nice formatting for the text file
+        df_summary_asstr = df_data.to_string(float_format=dec_format, 
                                                 justify='center')
-        # to format the header nicely
-        filler = "*" * 2
-        f.write(f'{filler} {heading} {filler} \n')
+        # write header and data 
+        f.write(f'***************** {heading} *****************\n')
         f.write(f'{df_summary_asstr}\n')
         f.write('\n')
 
-def plot_histograms(data, vars1):   
-    for var in vars1:
+# Function to plot histograms of data 
+def plot_histograms(data, var):   
         plt.figure()
-        sns.histplot(data=data, x=var, hue="Class", binwidth=0.2, kde=True)
+        sns.histplot(data, x=var, hue="Class", binwidth=0.2, kde=True)
         plt.savefig(f'plots/histogram_{var}.png')  
 
+# Run pandas correlation method
+def get_corr(data):
+    return data.corr()
 
 
+# ***************************** Reading in data ******************************
 # Read in the data from the source file - no header  
 data = pd.read_csv('data/iris.data', header=None)
 # Make a list of the columns
 variables = ["Sepal Length", "Sepal Width", "Petal Length",
              "Petal Width", "Class"]
-
+# List of variables without class
+variables_wo_class = variables[:-1]
 # Assign the header to the data
 data.columns = variables
 
 # get the different classifications
-
 class_names = data["Class"].unique()
-data_wo_class = data[variables[:-1]]
+# dataframe without class column
+data_wo_class = data.drop(columns="Class").copy()
 
-os.remove(f'summary/{summary_filename}')
-# get the statistics for the whole dataset
+
+# ********************** Outputting the summary stats ************************
+# Delete anything in summary directory
+files = glob.glob('summary/*')
+for f in files:
+    os.remove(f)
+    
+# Get the statistics for the whole dataset and write to file
 df_summary_all = get_summary_stats(data.drop(columns="Class"))
-# print to file
-print_summary_stats(f'summary/{summary_filename}', df_summary_all, "All data")
+write_to_file(summary_filename, df_summary_all, "All data")
+df_corr_all = get_corr(data)
+write_to_file(corr_filename, df_corr_all, "All data", "%.3f")
 
-# Get summary statistics for each class of iris and print to csv
+# Get summary stats and corr for each class of iris and write to text file
 for item in class_names:
     # Extract the data related to one class of iris
     iris_data = data[data["Class"] == item].copy()
     # Strip the class column before passing to function
     iris_data.drop(columns = "Class", inplace=True) 
-    df_summary = get_summary_stats(iris_data)    
-    print_summary_stats(f'summary/{summary_filename}', df_summary, item)
+    # Get the stats and write to file
+    df_summary = get_summary_stats(iris_data)
+    write_to_file(summary_filename, df_summary, item)
+    df_corr =  get_corr(iris_data)      
+    write_to_file(corr_filename, df_corr, item, "%.2f")   
+
+# Pandas dataframe of correlation stats
+df_corr = pd.DataFrame()
+df_corr = get_corr(data_wo_class)
+df_corr_plot.lock(["SL-SW"]["All"]) = df_corr.loc(index="Sepal Length", columns="Sepal Width")
+
+for item in class_names:
+    df_corr.concat(get_corr(iris_data))
+
+
+# ****************************** Plotting ************************************      
+# Generate the pair plot of scatters
+sns.set_theme()
+g = sns.pairplot(data, hue="Class", diag_kind="kde")
+g.map_lower(sns.kdeplot, levels=7, color=".2")
+g.savefig("plots/pairplot.png")
+
+# Generate the histograms for the 4 iris measurement variables
+for var in variables_wo_class:
+    plot_histograms(data, var)   
     
+# Plot histogram for the full dataset    
+plt.figure()
+sns.histplot(data_wo_class, binwidth=0.2, kde=True)
+plt.savefig('plots/histogram_all_data.png')  
+
+
 
         
-        
-plot_histograms(data, variables[:-1])
-        
-
 
 #sns.relplot(data=iseto, x="Sepal Length", y="Sepal Width")
 #test_hist = iseto.hist(column="Sepal Length")
@@ -87,9 +126,6 @@ plot_histograms(data, variables[:-1])
 small_data = data.iloc[0:5, :]
 #print(small_data)
 
-#sns.pairplot(data=data, hue="Class")
-
-#plt.savefig("plots/pairplot.png")
 
 #sns.displot(data=data, x="Petal Length", col="Class", kde=True)
 #plt.savefig("plots/displot.png")
@@ -111,7 +147,7 @@ min_PL = all_min["Petal Length"]
 #plt.savefig("plots/histplot.png")            
 
     #def main():
-sns.set_theme()
+
 
 #if __name__ == "__main__":
 #    main()

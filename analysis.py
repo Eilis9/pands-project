@@ -10,6 +10,10 @@ import numpy as np
 import math
 import matplotlib.pyplot as plt
 import seaborn as sns
+# Setting the ticks on the x and y axis
+from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
+
+
 
 summary_filename = "summary/summary_statistics.txt"
 corr_filename = "summary/correlation.txt"
@@ -93,10 +97,10 @@ for item in class_names:
 # Pandas dataframe of correlation stats
 df_corr = pd.DataFrame()
 df_corr = get_corr(data_wo_class)
-df_corr_plot.lock(["SL-SW"]["All"]) = df_corr.loc(index="Sepal Length", columns="Sepal Width")
+#df_corr_plot.lock(["SL-SW"]["All"]) = df_corr.loc(index="Sepal Length", columns="Sepal Width")
 
-for item in class_names:
-    df_corr.concat(get_corr(iris_data))
+#for item in class_names:
+#    df_corr.concat(get_corr(iris_data))
 
 
 # ****************************** Plotting ************************************      
@@ -110,16 +114,28 @@ g.savefig("plots/pairplot.png")
 for var in variables_wo_class:
     plot_histograms(data, var)   
     
+
 # Plot histogram for the full dataset    
+
 plt.figure()
 sns.histplot(data_wo_class, binwidth=0.2, kde=True)
 plt.savefig('plots/histogram_all_data.png')  
 
+custom_params = {"axes.spines.right": False, "axes.spines.top": False}
+sns.set_theme(style="ticks", )
+
+plt.figure()
+g = sns.scatterplot(data=data, x="Petal Width", y="Petal Length", hue="Class")
+#ax = g.axes
+#handles, labels = ax.get_legend_handles_labels()
+#ax.legend(handles=handles[1:], labels=labels[1:])
+
+plt.savefig("plots/petal_scatter.png")
+
+#g = sns.relplot(data=data, x="Sepal Width", y="Sepal Length", hue="Class")
+#g.savefig("plots/sepal_scatter.png")
 
 
-        
-
-#sns.relplot(data=iseto, x="Sepal Length", y="Sepal Width")
 #test_hist = iseto.hist(column="Sepal Length")
 #print(test_hist)
 # subset of the data for testing plots

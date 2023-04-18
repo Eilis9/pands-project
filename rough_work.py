@@ -28,3 +28,13 @@ def write_summary(summary_data, filename='summary/variable_summary.txt'):
 #iseto = data[data["Class"] == "Iris-setosa"].iloc[:, 0:4]
 #ivers = data[data["Class"] == "Iris-versicolor"].iloc[:, 0:4]
 #ivirg = data[data["Class"] == "Iris-verginica"].iloc[:, 0:4]
+
+
+plt.grid(which='major', linestyle='-', linewidth=0.6)
+plt.grid(which='minor', linestyle='-.', linewidth=0.4)
+ax.xaxis.set_major_locator(MultipleLocator(1))
+ax.xaxis.set_minor_locator(MultipleLocator(0.5))
+ax.yaxis.set_major_locator(MultipleLocator(1))
+ax.yaxis.set_minor_locator(MultipleLocator(0.5))
+
+#fig, ax = plt.subplots()

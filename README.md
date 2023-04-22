@@ -38,3 +38,5 @@ The basic statistical measures of the data are given in Table X.
 7. Stack Overflow "How to delete the contents of a folder", https://stackoverflow.com/questions/185936/how-to-delete-the-contents-of-a-folder (accessed Apr 16 2023).
 8. Seaborn Documentation, Pairplots https://seaborn.pydata.org/generated/seaborn.pairplot.html (accessed Apr 16 2023).
 9. https://stackoverflow.com/questions/51579215/remove-seaborn-lineplot-legend-title (acccessed Apr 18 2023)
+https://stackoverflow.com/questions/40950310/strip-trim-all-strings-of-a-dataframe
+https://pandas.pydata.org/pandas-docs/stable/user_guide/style.html

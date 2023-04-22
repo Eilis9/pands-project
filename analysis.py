@@ -91,7 +91,7 @@ for item in class_names:
     # Get the stats and write to file
     df_summary = get_summary_stats(iris_data)
     write_to_file(summary_filename, df_summary, item)
-    df_corr =  get_corr(iris_data)      
+    df_corr =  get_corr(iris_data)
     write_to_file(corr_filename, df_corr, item, "%.2f")   
 
 # Pandas dataframe of correlation stats
@@ -136,37 +136,10 @@ plt.savefig("plots/petal_scatter.png")
 #g.savefig("plots/sepal_scatter.png")
 
 
-#test_hist = iseto.hist(column="Sepal Length")
-#print(test_hist)
-# subset of the data for testing plots
-small_data = data.iloc[0:5, :]
-#print(small_data)
+# ******************************* Other Analysis *****************************
 
 
-#sns.displot(data=data, x="Petal Length", col="Class", kde=True)
-#plt.savefig("plots/displot.png")
 
-min_petallength = data["Petal Length"].min()
-all_min = data.min() 
-all_max = data.max()
-bin_size = 0.2
-#print(all_min, min_petallength)
-
-min_PL = all_min["Petal Length"]
-#print("ALL MIN", all_min)
-#print("min_PL", min_PL)
-
-#bins = np.arange(math.floor(all_min["Petal Length"]), math.ceil(all_max["Petal Length"])+1, bin_size)
-#print(min_data)
-
-#sns.histplot(data=data, x="Petal Length", hue="Class", bins=bins, kde=True)
-#plt.savefig("plots/histplot.png")            
-
-    #def main():
-
-
-#if __name__ == "__main__":
-#    main()
-
-
+#first_digit = data_wo_class_str.str[0]
+ 
 

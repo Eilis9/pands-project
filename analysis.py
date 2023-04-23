@@ -13,7 +13,7 @@ import seaborn as sns
 # Setting the ticks on the x and y axis
 from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
 
-
+#import imgkit
 
 summary_filename = "summary/summary_statistics.txt"
 corr_filename = "summary/correlation.txt"
@@ -28,7 +28,8 @@ def get_summary_stats(data, item=''):
     summary_df['Mean (cm)'] = data.mean()
     summary_df['Median (cm)'] = data.median()
     summary_df['StDev (cm)'] = data.std()
-   
+    summary_df['Variance (cm)'] = data.var() 
+    
     return summary_df
 
 # Function to write a summary of data to a file 
@@ -52,7 +53,6 @@ def plot_histograms(data, var):
 def get_corr(data):
     return data.corr()
 
-
 # ***************************** Reading in data ******************************
 # Read in the data from the source file - no header  
 data = pd.read_csv('data/iris.data', header=None)
@@ -68,7 +68,7 @@ data.columns = variables
 class_names = data["Class"].unique()
 # dataframe without class column
 data_wo_class = data.drop(columns="Class").copy()
-
+print("Data read in")
 
 # ********************** Outputting the summary stats ************************
 # Delete anything in summary directory
@@ -98,6 +98,8 @@ for item in class_names:
 df_corr = pd.DataFrame()
 df_corr = get_corr(data_wo_class)
 #df_corr_plot.lock(["SL-SW"]["All"]) = df_corr.loc(index="Sepal Length", columns="Sepal Width")
+print(f"Summary stats in {summary_filename} and {corr_filename}")
+
 
 #for item in class_names:
 #    df_corr.concat(get_corr(iris_data))
@@ -116,7 +118,6 @@ for var in variables_wo_class:
     
 
 # Plot histogram for the full dataset    
-
 plt.figure()
 sns.histplot(data_wo_class, binwidth=0.2, kde=True)
 plt.savefig('plots/histogram_all_data.png')  
@@ -124,16 +125,32 @@ plt.savefig('plots/histogram_all_data.png')
 custom_params = {"axes.spines.right": False, "axes.spines.top": False}
 sns.set_theme(style="ticks", )
 
+
+# maybe combine these 2 into one plot
 plt.figure()
 g = sns.scatterplot(data=data, x="Petal Width", y="Petal Length", hue="Class")
-#ax = g.axes
-#handles, labels = ax.get_legend_handles_labels()
-#ax.legend(handles=handles[1:], labels=labels[1:])
-
 plt.savefig("plots/petal_scatter.png")
 
-#g = sns.relplot(data=data, x="Sepal Width", y="Sepal Length", hue="Class")
-#g.savefig("plots/sepal_scatter.png")
+plt.figure()
+g = sns.scatterplot(data=data, x="Sepal Width", y="Sepal Length", hue="Class")
+plt.savefig("plots/sepal_scatter.png")
+
+
+# Create a figure with 4 histogram subplots showing each variable
+sns.set_theme(style='white')
+fig, ax = plt.subplots(nrows = 2, ncols =2, figsize=(10,8))
+sns.histplot(data, x="Petal Length", hue="Class", binwidth=0.2, kde=True, ax=ax[0,0])
+sns.histplot(data, x="Petal Width", hue="Class", binwidth=0.2, kde=True, ax=ax[0,1])
+sns.histplot(data, x="Sepal Length", hue="Class", binwidth=0.2, kde=True, ax=ax[1,0])
+sns.histplot(data, x="Sepal Width", hue="Class", binwidth=0.2, kde=True, ax=ax[1,1])
+fig.tight_layout()
+plt.savefig("plots/4_plot_histogram.png")
+#plt.show()
+
+
+print("Plots in /plots")
+
+#sns.boxplot()
 
 
 # ******************************* Other Analysis *****************************

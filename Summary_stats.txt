@@ -1,5 +1,0 @@
-	Min	Max	Mean	Median	Standard Deviation
-Sepal Length	4.90	7.90	6.59	6.50	0.64
-Sepal Width	2.20	3.80	2.97	3.00	0.32
-Petal Length	4.50	6.90	5.55	5.55	0.55
-Petal Width	1.40	2.50	2.03	2.00	0.27

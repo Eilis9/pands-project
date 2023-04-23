@@ -417,7 +417,7 @@ The basic statistical measures of the data are given in the tables below.
       <th class="blank level0" >&nbsp;</th>
       <th id="T_cc659_level0_col0" class="col_heading level0 col0" >Sepal Length</th>
       <th id="T_cc659_level0_col1" class="col_heading level0 col1" >Sepal Width</th>
-      <th id="T_cc659_level0_col2" class="yellow" >Petal Length</th> 
+      <th id="T_cc659_level0_col2" class="col_heading level0 col2" >Petal Length</th> 
       <th id="T_cc659_level0_col3" class="col_heading level0 col3" >Petal Width</th>
     </tr>
   </thead>
@@ -473,3 +473,7 @@ The basic statistical measures of the data are given in the tables below.
 https://stackoverflow.com/questions/40950310/strip-trim-all-strings-of-a-dataframe
 https://pandas.pydata.org/pandas-docs/stable/user_guide/style.html
 https://jovian.com/suresh-kumar-m/python-matplotlib-data-visualization
+https://stackoverflow.com/questions/60598837/html-to-image-using-python
+https://stackoverflow.com/questions/29530355/plotting-multiple-histograms-in-grid
+Box plots and legends https://stackoverflow.com/questions/62252493/create-a-single-legend-for-multiple-plot-in-matplotlib-seaborn
+Subplotshttps://dev.to/thalesbruno/subplotting-with-matplotlib-and-seaborn-5ei8

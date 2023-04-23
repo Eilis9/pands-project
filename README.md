@@ -405,8 +405,8 @@ The basic statistical measures of the data are given in the tables below.
 
 
 
-<style type="text/css">
-#T_cc659_row0_col2, #T_cc659_row2_col0 {
+<style>
+.yellow {
   background-color: yellow;
 }
 </style>
@@ -417,7 +417,7 @@ The basic statistical measures of the data are given in the tables below.
       <th class="blank level0" >&nbsp;</th>
       <th id="T_cc659_level0_col0" class="col_heading level0 col0" >Sepal Length</th>
       <th id="T_cc659_level0_col1" class="col_heading level0 col1" >Sepal Width</th>
-      <th id="T_cc659_level0_col2" class="col_heading level0 col2" >Petal Length</th>
+      <th id="T_cc659_level0_col2" class="yellow" >Petal Length</th> 
       <th id="T_cc659_level0_col3" class="col_heading level0 col3" >Petal Width</th>
     </tr>
   </thead>

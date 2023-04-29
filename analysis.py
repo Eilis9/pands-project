@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 # Setting the ticks on the x and y axis
 from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
+from numpy.polynomial import Polynomial as P
 
 #import imgkit
 
@@ -52,6 +53,13 @@ def plot_histograms(data, var):
 # Run pandas correlation method
 def get_corr(data):
     return data.corr()
+
+
+def get_linear_fit(numpy_x, numpy_y):
+    # return the indexes which have numbers in both x and y (to avoid nans)
+    idx = np.isfinite(numpy_x[:,0]) & np.isfinite(numpy_y[:,1])
+    linear_fit = P.fit(numpy_x[idx,0], numpy_y[idx,1], 1)
+    return linear_fit
 
 # ***************************** Reading in data ******************************
 # Read in the data from the source file - no header  
@@ -107,7 +115,7 @@ print(f"Summary stats in {summary_filename} and {corr_filename}")
 
 # ****************************** Plotting ************************************      
 # Generate the pair plot of scatters
-sns.set_theme()
+sns.set_theme('whitegrid')
 g = sns.pairplot(data, hue="Class", diag_kind="kde")
 g.map_lower(sns.kdeplot, levels=7, color=".2")
 g.savefig("plots/pairplot.png")
@@ -116,7 +124,6 @@ g.savefig("plots/pairplot.png")
 for var in variables_wo_class:
     plot_histograms(data, var)   
     
-
 # Plot histogram for the full dataset    
 plt.figure()
 sns.histplot(data_wo_class, binwidth=0.2, kde=True)
@@ -125,16 +132,15 @@ plt.savefig('plots/histogram_all_data.png')
 custom_params = {"axes.spines.right": False, "axes.spines.top": False}
 sns.set_theme(style="ticks", )
 
-
-# maybe combine these 2 into one plot
+# Plot Petal Width v Petal Length
 plt.figure()
 g = sns.scatterplot(data=data, x="Petal Width", y="Petal Length", hue="Class")
 plt.savefig("plots/petal_scatter.png")
 
+# Plot Sepal Length v Sepal Width
 plt.figure()
 g = sns.scatterplot(data=data, x="Sepal Width", y="Sepal Length", hue="Class")
 plt.savefig("plots/sepal_scatter.png")
-
 
 # Create a figure with 4 histogram subplots showing each variable
 sns.set_theme(style='white')
@@ -145,9 +151,6 @@ sns.histplot(data, x="Sepal Length", hue="Class", binwidth=0.2, kde=True, ax=ax[
 sns.histplot(data, x="Sepal Width", hue="Class", binwidth=0.2, kde=True, ax=ax[1,1])
 fig.tight_layout()
 plt.savefig("plots/4_plot_histogram.png")
-#plt.show()
-
-
 print("Plots in /plots")
 
 #sns.boxplot()

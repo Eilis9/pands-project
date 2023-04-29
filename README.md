@@ -476,4 +476,6 @@ https://jovian.com/suresh-kumar-m/python-matplotlib-data-visualization
 https://stackoverflow.com/questions/60598837/html-to-image-using-python
 https://stackoverflow.com/questions/29530355/plotting-multiple-histograms-in-grid
 Box plots and legends https://stackoverflow.com/questions/62252493/create-a-single-legend-for-multiple-plot-in-matplotlib-seaborn
-Subplotshttps://dev.to/thalesbruno/subplotting-with-matplotlib-and-seaborn-5ei8
+Subplots https://dev.to/thalesbruno/subplotting-with-matplotlib-and-seaborn-5ei8
+regression plots in seaborn https://datavizpyr.com/add-regression-line-per-group-with-seaborn-in-python/#:~:text=We%20will%20start%20with%20two%20ways%20in%20Seaborn,adding%20regression%20line%20per%20group%20can%20be%20meaningful.
+https://seaborn.pydata.org/generated/seaborn.regplot.html#seaborn.regplot

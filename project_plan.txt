@@ -6,7 +6,7 @@ Project Plan (Eilis Donohue PANDS project):
 2. Do the minimum analysis
 	a. Perform the minimum analysis min, max etc - DONE
 	b. Tidy up the output to file with some .rjust() string formatting etc - DONE
-	c. Do some basic plots - histograms, scatters, the plot matrix (seaborn) - almost DONE!
+	c. Do some basic plots - histograms, scatters, the plot matrix (seaborn) - DONE!
 	
 3. Further analysis
 	a. Try to recreate the Fisher analysis, solving for alpha parameters? - Maybe not!
@@ -17,8 +17,8 @@ Project Plan (Eilis Donohue PANDS project):
 	f. Rolling mean - looking at percentiles to assess randomness of data collection?
 	
 4. Putting this in a jupyter notebook
-	a. How do you hide code cells for nbconvert...
-	b. Displaying tables side by side?
+	a. How do you hide code cells for nbconvert... Not relevant
+	b. Displaying tables side by side? not relevant
 	c. Generally laying it out...	 
 
 

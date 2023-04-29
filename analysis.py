@@ -54,13 +54,30 @@ def plot_histograms(data, var):
 def get_corr(data):
     return data.corr()
 
-
+# Function to get a linear regression fit between 2 numpy arrays
 def get_linear_fit(numpy_x, numpy_y):
     # return the indexes which have numbers in both x and y (to avoid nans)
-    idx = np.isfinite(numpy_x[:,0]) & np.isfinite(numpy_y[:,1])
-    linear_fit = P.fit(numpy_x[idx,0], numpy_y[idx,1], 1)
+    idx = np.isfinite(numpy_x) & np.isfinite(numpy_y)
+    # Use the numpy polynomial fit method 
+    linear_fit = P.fit(numpy_x[idx], numpy_y[idx], 1)
     return linear_fit
 
+def plot_rollingmean(data, window, iris, var, axis, fig):
+    data['Rolling Mean'] = data[var].rolling(window).mean()
+    data_np = data.to_numpy()
+    # return the linear fit 
+    linear_fit = get_linear_fit(data_np[:,0], data_np[:,2])
+    x = np.linspace(np.min(data_np[:,0]), np.max(data_np[:,0]))                      
+    y_fitted = linear_fit(x)
+    data = pd.DataFrame(data_np, columns=["Index", var, "Rolling Mean"])
+    data['Rolling_linear'] = y_fitted
+    data['Mean'] = data[var].mean()
+    data = data.drop(columns="Index").copy()
+    axis.plot(data[var],'bo', linestyle='')
+    axis.plot(data[['Rolling Mean', 'Rolling_linear', 'Mean']])   
+    axis.set_ylabel(var +' (cm)')
+    axis.set_xlabel('Sample Index')
+  
 # ***************************** Reading in data ******************************
 # Read in the data from the source file - no header  
 data = pd.read_csv('data/iris.data', header=None)
@@ -115,7 +132,7 @@ print(f"Summary stats in {summary_filename} and {corr_filename}")
 
 # ****************************** Plotting ************************************      
 # Generate the pair plot of scatters
-sns.set_theme('whitegrid')
+sns.set_theme(style='whitegrid')
 g = sns.pairplot(data, hue="Class", diag_kind="kde")
 g.map_lower(sns.kdeplot, levels=7, color=".2")
 g.savefig("plots/pairplot.png")
@@ -153,10 +170,21 @@ fig.tight_layout()
 plt.savefig("plots/4_plot_histogram.png")
 print("Plots in /plots")
 
-#sns.boxplot()
-
-
 # ******************************* Other Analysis *****************************
+# For each iris type, create a plot with 4 subplots of the measurements with 
+#a rolling mean  calculated, a linear fit of that rolling mean and also 
+#the mean of the dataset. 
+for iris in class_names:
+     data_iris = data[data["Class"] == iris].drop(columns = 'Class').copy()
+     fig, axs = plt.subplots(2, 2, figsize=(10, 10))
+     axis_list = np.array([axs[0,0], axs[0,1], axs[1,0], axs[1,1]])
+     for count, var in enumerate(variables_wo_class):         
+         data_iris_variable = data_iris[var].reset_index()
+         plot_rollingmean(data_iris_variable, 5, iris, var, axis_list[count], fig)
+     fig.suptitle(iris, fontsize=16)
+     axis_list[count].legend(['Measured','Rolling Mean', 'Rolling_linear', 'Mean'])
+     plt.tight_layout()    
+     fig.savefig(f'plots/rolling_mean_{iris}.png') 
 
 
 

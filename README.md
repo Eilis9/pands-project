@@ -479,3 +479,8 @@ Box plots and legends https://stackoverflow.com/questions/62252493/create-a-sing
 Subplots https://dev.to/thalesbruno/subplotting-with-matplotlib-and-seaborn-5ei8
 regression plots in seaborn https://datavizpyr.com/add-regression-line-per-group-with-seaborn-in-python/#:~:text=We%20will%20start%20with%20two%20ways%20in%20Seaborn,adding%20regression%20line%20per%20group%20can%20be%20meaningful.
 https://seaborn.pydata.org/generated/seaborn.regplot.html#seaborn.regplot
+
+looping thru axis list https://stackoverflow.com/questions/20288842/matplotlib-iterate-subplot-axis-array-through-single-list
+tight layout on subplts: https://matplotlib.org/stable/tutorials/intermediate/tight_layout_guide.html
+figure size: https://stackoverflow.com/questions/14770735/how-do-i-change-the-figure-size-with-subplots
+https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.plot.html

@@ -97,26 +97,17 @@ virg_data = data[data["Class"] == "Iris-virginica"].drop(columns ='Class').copy(
 vers_data = data[data["Class"] == "Iris-versicolor"].drop(columns ='Class').copy()
 
 
-for iris in class_names:
-     data_iris = data[data["Class"] == iris].drop(columns = 'Class').copy()
-     fig, axs = plt.subplots(2, 2, figsize=(10, 10))
-     axis_list = np.array([axs[0,0], axs[0,1], axs[1,0], axs[1,1]])
-     for count, var in enumerate(variables_wo_class):         
-         data_iris_variable = data_iris[var].reset_index()
-         plot_rollingmean(data_iris_variable, 5, iris, var, fig, axis_list[count])
-     fig.suptitle(iris, fontsize=16)
-     axis_list[count].legend(['Measured','Rolling Mean', 'Rolling lin_fit', 'Mean'])
-     plt.tight_layout()    
-     fig.savefig(f'plots/rolling_mean_{iris}.png') 
+data_wo_class_mm = data_wo_class * 10
+strdata = data_wo_class_mm.astype(str).copy()
+stacked = strdata.stack().copy()
+first_digit = stacked.str[0]
+first_digit_int = first_digit.astype(int).copy()
+maxf = first_digit_int.max()
 
-for iris in class_names:
-    fig, axs = plt.subplots(1)
-    data_iris = data[data["Class"] == iris].drop(columns = 'Class').copy()
-    data_iris_variable = data_iris['Size'].reset_index()
-    plot_rollingmean(data_iris_variable, 5, iris, "Size", fig, axs)
-    fig.suptitle(iris, fontsize=16)
-    axs.legend(['Measured','Rolling Mean', 'Rolling lin_fit', 'Mean'])
-    fig.savefig(f'plots/rolling_mean_size_{iris}.png')
+plt.figure() 
+plt.hist(first_digit_int, bins=7)
+plt.show()
+
 
 #     plt.show()
         

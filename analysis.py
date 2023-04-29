@@ -1,13 +1,15 @@
 '''
+HDip in Computing in Data Analytics
 PANDS Project 2023
-Fisher's Iris Dataset
+Lecturer: Andrew Beatty
+Analysis of Fisher's Iris Dataset
 Author: Eilis Donohue (G00006088)
+See analysis.ipynb for code, commentary and references
 '''
 import os
 import glob
 import pandas as pd
 import numpy as np
-import math
 import matplotlib.pyplot as plt
 import seaborn as sns
 # Setting the ticks on the x and y axis
@@ -39,12 +41,12 @@ def write_to_file(summary_filename, df_data, heading, dec_format="%.2f"):
         # to_string for nice formatting for the text file
         df_summary_asstr = df_data.to_string(float_format=dec_format, 
                                                 justify='center')
-        # write header and data 
+        # write header and data with new lines in between 
         f.write(f'***************** {heading} *****************\n')
         f.write(f'{df_summary_asstr}\n')
         f.write('\n')
 
-# Function to plot histograms of data 
+# Function to plot seaborn histograms of data 
 def plot_histograms(data, var):   
         plt.figure()
         sns.histplot(data, x=var, hue="Class", binwidth=0.2, kde=True)
@@ -58,11 +60,15 @@ def get_corr(data):
 def get_linear_fit(numpy_x, numpy_y):
     # return the indexes which have numbers in both x and y (to avoid nans)
     idx = np.isfinite(numpy_x) & np.isfinite(numpy_y)
-    # Use the numpy polynomial fit method 
+    # Use the numpy polynomial fit method to get a linear regression (straight
+    # line trend)
     linear_fit = P.fit(numpy_x[idx], numpy_y[idx], 1)
     return linear_fit
 
+# Function which calculates a rolling mean and plots this with a linear
+# fit and the mean of the set
 def plot_rollingmean(data, window, iris, var, axis, fig):
+    # Calculate the rolling mean
     data['Rolling Mean'] = data[var].rolling(window).mean()
     data_np = data.to_numpy()
     # return the linear fit 
@@ -96,7 +102,7 @@ data_wo_class = data.drop(columns="Class").copy()
 print("Data read in")
 
 # ********************** Outputting the summary stats ************************
-# Delete anything in summary directory
+# Delete all files in summary directory
 files = glob.glob('summary/*')
 for f in files:
     os.remove(f)
@@ -171,9 +177,9 @@ plt.savefig("plots/4_plot_histogram.png")
 print("Plots in /plots")
 
 # ******************************* Other Analysis *****************************
-# For each iris type, create a plot with 4 subplots of the measurements with 
-#a rolling mean  calculated, a linear fit of that rolling mean and also 
-#the mean of the dataset. 
+''' For each iris type, create a plot with 4 subplots of the measurements with 
+# a rolling mean  calculated, a linear fit of that rolling mean and also 
+# the mean of the dataset''' 
 for iris in class_names:
      data_iris = data[data["Class"] == iris].drop(columns = 'Class').copy()
      fig, axs = plt.subplots(2, 2, figsize=(10, 10))
@@ -182,12 +188,39 @@ for iris in class_names:
          data_iris_variable = data_iris[var].reset_index()
          plot_rollingmean(data_iris_variable, 5, iris, var, axis_list[count], fig)
      fig.suptitle(iris, fontsize=16)
-     axis_list[count].legend(['Measured','Rolling Mean', 'Rolling_linear', 'Mean'])
+     axis_list[count].legend(['Measured','Rolling Mean', 'Rolling lin_fit', 'Mean'])
      plt.tight_layout()    
      fig.savefig(f'plots/rolling_mean_{iris}.png') 
+     
+     
+iris_size = data['Sepal Width'] * data['Sepal Length'] + \
+            data['Petal Width'] * data['Petal Length']     
+# Create a new dataframe for this makey-uppy variable            
+iris_size = pd.DataFrame(iris_size).copy()
+iris_size.columns('Size')
+iris_size['Class'] = data['Class']
+        
+for iris in class_names:
+    fig, axs = plt.subplots(1)
+    data_iris = iris_size[iris_size["Class"] == iris].drop(columns = 'Class').copy()
+    data_iris_variable = data_iris.reset_index()
+    plot_rollingmean(data_iris_variable, 5, iris, "Size", fig, axs)
+    fig.suptitle(iris, fontsize=16)
+    axs.legend(['Measured','Rolling Mean', 'Rolling lin_fit', 'Mean'])
+    fig.savefig(f'plots/rolling_mean_size_{iris}.png')     
 
+''' Take all the measurements in the data set and multiply by 10 to get the 
+measurement in mm. Then plot a histogram of the first digit of each 
+measurement to see if the set satisifies Benford's Law (though Benford's Law 
+is more applicable to large numbers)'''
 
+data_wo_class_mm = data_wo_class * 10
+strdata = data_wo_class_mm.astype(str).copy()
+stacked = strdata.stack().copy()
+first_digit = stacked.str[0]
+first_digit_int = first_digit.astype(int).copy()
 
-#first_digit = data_wo_class_str.str[0]
- 
+plt.figure() 
+plt.hist(first_digit_int, bins=7)
+plt.savefig('plots/histogram_Benfords_Law.png')
 

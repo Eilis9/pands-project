@@ -469,6 +469,7 @@ The basic statistical measures of the data are given in the tables below.
 6. Pandas documentation, https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_string.html (accessed Apr 15 2023).
 7. Stack Overflow "How to delete the contents of a folder", https://stackoverflow.com/questions/185936/how-to-delete-the-contents-of-a-folder (accessed Apr 16 2023).
 8. Seaborn Documentation, Pairplots https://seaborn.pydata.org/generated/seaborn.pairplot.html (accessed Apr 16 2023).
+    Seaborn set theme: https://seaborn.pydata.org/generated/seaborn.set_theme.html
 9. https://stackoverflow.com/questions/51579215/remove-seaborn-lineplot-legend-title (acccessed Apr 18 2023)
 https://stackoverflow.com/questions/40950310/strip-trim-all-strings-of-a-dataframe
 https://pandas.pydata.org/pandas-docs/stable/user_guide/style.html
@@ -478,9 +479,24 @@ https://stackoverflow.com/questions/29530355/plotting-multiple-histograms-in-gri
 Box plots and legends https://stackoverflow.com/questions/62252493/create-a-single-legend-for-multiple-plot-in-matplotlib-seaborn
 Subplots https://dev.to/thalesbruno/subplotting-with-matplotlib-and-seaborn-5ei8
 regression plots in seaborn https://datavizpyr.com/add-regression-line-per-group-with-seaborn-in-python/#:~:text=We%20will%20start%20with%20two%20ways%20in%20Seaborn,adding%20regression%20line%20per%20group%20can%20be%20meaningful.
+polynomial fit: https://stackoverflow.com/questions/67728068/get-the-coefficients-of-a-polynomial-with-numpy
+numpy polynomial https://numpy.org/doc/stable/reference/generated/numpy.polynomial.polynomial.Polynomial.fit.html#numpy.polynomial.polynomial.Polynomial.fit
+
 https://seaborn.pydata.org/generated/seaborn.regplot.html#seaborn.regplot
 
-looping thru axis list https://stackoverflow.com/questions/20288842/matplotlib-iterate-subplot-axis-array-through-single-list
-tight layout on subplts: https://matplotlib.org/stable/tutorials/intermediate/tight_layout_guide.html
-figure size: https://stackoverflow.com/questions/14770735/how-do-i-change-the-figure-size-with-subplots
-https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.plot.html
+looping thru axis list https://stackoverflow.com/questions/20288842/matplotlib-iterate-subplot-axis-array-through-single-list (accessed Apr 29 2023)
+tight layout on subplts: https://matplotlib.org/stable/tutorials/intermediate/tight_layout_guide.html (accessed Apr 29 2023)
+figure size: https://stackoverflow.com/questions/14770735/how-do-i-change-the-figure-size-with-subplots (accessed Apr 29 2023)
+https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.plot.html (accessed Apr 29 2023)
+Extracting first digits from string in pandas series: https://stackoverflow.com/questions/51607400/how-to-extract-first-8-characters-from-a-string-in-pandas (accessed Apr 29 2023)
+pyplot legend https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.legend.html
+pyplot.plot() fomrmatting https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html
+pyplot subplots https://matplotlib.org/3.1.1/gallery/subplots_axes_and_figures/figure_title.html
+loop over subplot axes: https://stackoverflow.com/questions/20288842/matplotlib-iterate-subplot-axis-array-through-single-list
+python enumerate https://realpython.com/python-enumerate/
+index numpy for regression with nans: https://stackoverflow.com/questions/28647172/numpy-polyfit-doesnt-handle-nan-values
+pandas reset index: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.reset_index.html
+pandas index to column https://stackoverflow.com/questions/20461165/how-to-convert-index-of-a-pandas-dataframe-into-a-column
+pyplot.scatter() https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.scatter.html
+plotting inline in Jupyter notebook: https://data36.com/linear-regression-in-python-numpy-polyfit/
+jupyter notebook and scrollable frames: https://stackoverflow.com/questions/69353832/why-does-jupyter-sometimes-put-plots-in-scrollable-frames#:~:text=The%20reason%20it's%20so%20is,is%20more%20of%20a%20feature.

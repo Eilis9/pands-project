@@ -12,8 +12,6 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-# Setting the ticks on the x and y axis
-from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
 from numpy.polynomial import Polynomial as P
 
 summary_filename = "summary/summary_statistics.txt"
@@ -80,9 +78,21 @@ def plot_rollingmean(data, window, iris, var, fig, axis):
     axis.plot(data[['Rolling Mean', 'Rolling_linear', 'Mean']])   
     axis.set_ylabel(var +' (cm)')
     axis.set_xlabel('Sample Index')
+    
+def make_subdirs(subdir_list):
+    # loop over the subdirs to be created
+    for subdir in subdir_list:
+        # check if it exists aleady, if so delete contents
+        if subdir in os.listdir():
+            delete_subfolder_files(subdir)
+        else:
+            # if not - create it
+            os.makedirs(subdir)
   
 def delete_subfolder_files(location):
-    for f in location:
+    # delete all files by using wildcard
+    location = location + "/*"
+    for f in glob.glob(location):
         os.remove(f)
 
 # ***************************** Reading in data ******************************
@@ -103,10 +113,11 @@ class_names = data["Class"].unique()
 data_wo_class = data.drop(columns="Class").copy()
 print("Data read in")
 
-# ********************** Outputting the summary stats ************************
-# Delete all files in summary dir
-delete_subfolder_files(glob.glob('summary/*')) 
-    
+# ***************************** Set up subdirs ******************************
+# Set up the subdirectors for the summary stat files and plots
+make_subdirs(['summary', 'plots'])
+
+# ********************** Outputting the summary stats ************************    
 # Get the statistics for the whole dataset and write to file
 df_summary_all = get_summary_stats(data.drop(columns="Class"))
 write_to_file(summary_filename, df_summary_all, "All data")
@@ -130,10 +141,7 @@ df_corr = pd.DataFrame()
 df_corr = get_corr(data_wo_class)
 print(f"Summary stats in {summary_filename} and {corr_filename}")
 
-# ****************************** Plotting ************************************
-# Delete all files in plots directory
-delete_subfolder_files(glob.glob('plots/*'))
-    
+# ****************************** Plotting ************************************   
 # Generate the pair plot of scatters
 sns.set_theme(style='whitegrid')
 g = sns.pairplot(data, hue="Class", diag_kind="kde")
@@ -149,20 +157,16 @@ plt.figure()
 sns.histplot(data_wo_class, binwidth=0.2, kde=True)
 plt.savefig('plots/histogram_all_data.png')  
 
-custom_params = {"axes.spines.right": False, "axes.spines.top": False}
 sns.set_theme(style="ticks", )
-#plt.rcParams["figure.figsize"] = (10,8)
-# print('after custom params')
+
 # # Plot Length v Width for Sepal and Petal with linear regression fit
 fig = plt.figure()
 sns.lmplot(x ='Petal Width', y ='Petal Length', data = data, hue="Class")
 fig.savefig("plots/petal_scatter.png")
-print('after petals scatter')
 
 fig = plt.figure()
 sns.lmplot(x ='Sepal Width', y ='Sepal Length', data = data, hue="Class")
 fig.savefig("plots/sepal_scatter.png")
-print('after sepal scatter')
 
 # Create a figure with 4 histogram subplots showing each variable
 sns.set_theme(style='white')

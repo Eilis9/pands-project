@@ -10,9 +10,11 @@ Student: Eilis Donohue (G00006088)
 A repository for the analysis conducted as part of the Project assessment for  the Programming and Scripting Module of the HDip in Data Analytics beginning January 2023. 
 
 Software Used: 
- - Python v3.7 and higher  
+ - Python v3.7 and higher
+- Jupyter Notebook 6.4.12   
  </p>
 
+The analysis for the project is in analysis.py and in analysis.ipynb. All references used are given in the Jupyter Notebook. The Jupyter Notebook should be downloaded and run locally.
  - - -
 
 

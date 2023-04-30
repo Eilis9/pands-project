@@ -101,17 +101,27 @@ data_wo_class_mm = data_wo_class * 10
 strdata = data_wo_class_mm.astype(str).copy()
 stacked = strdata.stack().copy()
 first_digit = stacked.str[0]
-first_digit_int = first_digit.astype(int).copy()
-maxf = first_digit_int.max()
+first_digit = first_digit.tolist()
+
+digit_keylist = ['1','2','3','4','5','6','7','8','9']
+digit_count_dict = {}
+for key in digit_keylist:
+    digit_count_dict[key] = first_digit.count(key)
+    
 
 plt.figure() 
-plt.hist(first_digit_int, bins=7)
+plt.bar(range(len(digit_count_dict)), digit_count_dict.values(), tick_label=
+        list(digit_count_dict.keys()))
+plt.xlabel('First Digit')
+plt.ylabel('Count')
+
+plt.title('First Digit Count in Iris Dataset')
+plt.savefig('plots/histogram_Benfords_Law1.png')
 plt.show()
-
-
-#     plt.show()
         
-        
+digit1_percent = digit_count_dict['1'] / len(first_digit) * 100
+print(f'1 appears as the first digit {digit1_percent:.1f}% of the time')
+
 #data_iris = data[data["Class"] == "Iris-setosa"].drop(columns = 'Class').copy()        
 #data_iris_var = pd.DataFrame(data_iris['Sepal Length'])
 #data_iris_var['Rolling Mean'] = data_iris_var.rolling(5).mean()

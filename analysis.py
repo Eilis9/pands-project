@@ -16,8 +16,6 @@ import seaborn as sns
 from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
 from numpy.polynomial import Polynomial as P
 
-#import imgkit
-
 summary_filename = "summary/summary_statistics.txt"
 corr_filename = "summary/correlation.txt"
 
@@ -67,8 +65,7 @@ def get_linear_fit(numpy_x, numpy_y):
 
 # Function which calculates a rolling mean and plots this with a linear
 # fit and the mean of the set
-def plot_rollingmean(data, window, iris, var, axis, fig):
-    # Calculate the rolling mean
+def plot_rollingmean(data, window, iris, var, fig, axis):
     data['Rolling Mean'] = data[var].rolling(window).mean()
     data_np = data.to_numpy()
     # return the linear fit 
@@ -84,6 +81,10 @@ def plot_rollingmean(data, window, iris, var, axis, fig):
     axis.set_ylabel(var +' (cm)')
     axis.set_xlabel('Sample Index')
   
+def delete_subfolder_files(location):
+    for f in location:
+        os.remove(f)
+
 # ***************************** Reading in data ******************************
 # Read in the data from the source file - no header  
 data = pd.read_csv('data/iris.data', header=None)
@@ -94,7 +95,8 @@ variables = ["Sepal Length", "Sepal Width", "Petal Length",
 variables_wo_class = variables[:-1]
 # Assign the header to the data
 data.columns = variables
-
+# Check for any missing values in the dataframe and sum up on rows and columns
+print(f'{data.isna().sum().sum()} missing values in dataframe')
 # get the different classifications
 class_names = data["Class"].unique()
 # dataframe without class column
@@ -102,10 +104,8 @@ data_wo_class = data.drop(columns="Class").copy()
 print("Data read in")
 
 # ********************** Outputting the summary stats ************************
-# Delete all files in summary directory
-files = glob.glob('summary/*')
-for f in files:
-    os.remove(f)
+# Delete all files in summary dir
+delete_subfolder_files(glob.glob('summary/*')) 
     
 # Get the statistics for the whole dataset and write to file
 df_summary_all = get_summary_stats(data.drop(columns="Class"))
@@ -125,18 +125,15 @@ for item in class_names:
     df_corr =  get_corr(iris_data)
     write_to_file(corr_filename, df_corr, item, "%.2f")   
 
-# Pandas dataframe of correlation stats
+# Get the pandas dataframe of correlation stats for the whole dataset
 df_corr = pd.DataFrame()
 df_corr = get_corr(data_wo_class)
-#df_corr_plot.lock(["SL-SW"]["All"]) = df_corr.loc(index="Sepal Length", columns="Sepal Width")
 print(f"Summary stats in {summary_filename} and {corr_filename}")
 
-
-#for item in class_names:
-#    df_corr.concat(get_corr(iris_data))
-
-
-# ****************************** Plotting ************************************      
+# ****************************** Plotting ************************************
+# Delete all files in plots directory
+delete_subfolder_files(glob.glob('plots/*'))
+    
 # Generate the pair plot of scatters
 sns.set_theme(style='whitegrid')
 g = sns.pairplot(data, hue="Class", diag_kind="kde")
@@ -154,16 +151,18 @@ plt.savefig('plots/histogram_all_data.png')
 
 custom_params = {"axes.spines.right": False, "axes.spines.top": False}
 sns.set_theme(style="ticks", )
+#plt.rcParams["figure.figsize"] = (10,8)
+# print('after custom params')
+# # Plot Length v Width for Sepal and Petal with linear regression fit
+fig = plt.figure()
+sns.lmplot(x ='Petal Width', y ='Petal Length', data = data, hue="Class")
+fig.savefig("plots/petal_scatter.png")
+print('after petals scatter')
 
-# Plot Petal Width v Petal Length
-plt.figure()
-g = sns.scatterplot(data=data, x="Petal Width", y="Petal Length", hue="Class")
-plt.savefig("plots/petal_scatter.png")
-
-# Plot Sepal Length v Sepal Width
-plt.figure()
-g = sns.scatterplot(data=data, x="Sepal Width", y="Sepal Length", hue="Class")
-plt.savefig("plots/sepal_scatter.png")
+fig = plt.figure()
+sns.lmplot(x ='Sepal Width', y ='Sepal Length', data = data, hue="Class")
+fig.savefig("plots/sepal_scatter.png")
+print('after sepal scatter')
 
 # Create a figure with 4 histogram subplots showing each variable
 sns.set_theme(style='white')
@@ -173,20 +172,20 @@ sns.histplot(data, x="Petal Width", hue="Class", binwidth=0.2, kde=True, ax=ax[0
 sns.histplot(data, x="Sepal Length", hue="Class", binwidth=0.2, kde=True, ax=ax[1,0])
 sns.histplot(data, x="Sepal Width", hue="Class", binwidth=0.2, kde=True, ax=ax[1,1])
 fig.tight_layout()
-plt.savefig("plots/4_plot_histogram.png")
+fig.savefig("plots/4_plot_histogram.png")
 print("Plots in /plots")
 
-# ******************************* Other Analysis *****************************
+# ******************************* Further Analysis *****************************
 ''' For each iris type, create a plot with 4 subplots of the measurements with 
-# a rolling mean  calculated, a linear fit of that rolling mean and also 
-# the mean of the dataset''' 
+a rolling mean  calculated, a linear fit of that rolling mean and also 
+the mean of the dataset''' 
 for iris in class_names:
      data_iris = data[data["Class"] == iris].drop(columns = 'Class').copy()
      fig, axs = plt.subplots(2, 2, figsize=(10, 10))
      axis_list = np.array([axs[0,0], axs[0,1], axs[1,0], axs[1,1]])
      for count, var in enumerate(variables_wo_class):         
          data_iris_variable = data_iris[var].reset_index()
-         plot_rollingmean(data_iris_variable, 5, iris, var, axis_list[count], fig)
+         plot_rollingmean(data_iris_variable, 5, iris, var, fig, axis_list[count])
      fig.suptitle(iris, fontsize=16)
      axis_list[count].legend(['Measured','Rolling Mean', 'Rolling lin_fit', 'Mean'])
      plt.tight_layout()    
@@ -197,30 +196,53 @@ iris_size = data['Sepal Width'] * data['Sepal Length'] + \
             data['Petal Width'] * data['Petal Length']     
 # Create a new dataframe for this makey-uppy variable            
 iris_size = pd.DataFrame(iris_size).copy()
-iris_size.columns('Size')
+iris_size.columns=['Size']
 iris_size['Class'] = data['Class']
-        
+
+# Loop over classes in the size dataframe and create a rolling mean plot for
+# each iris     
 for iris in class_names:
-    fig, axs = plt.subplots(1)
+    fig, axs = plt.subplots()   
     data_iris = iris_size[iris_size["Class"] == iris].drop(columns = 'Class').copy()
     data_iris_variable = data_iris.reset_index()
     plot_rollingmean(data_iris_variable, 5, iris, "Size", fig, axs)
     fig.suptitle(iris, fontsize=16)
     axs.legend(['Measured','Rolling Mean', 'Rolling lin_fit', 'Mean'])
-    fig.savefig(f'plots/rolling_mean_size_{iris}.png')     
+    fig.savefig(f'plots/rolling_mean_size_{iris}.png')   
+
 
 ''' Take all the measurements in the data set and multiply by 10 to get the 
 measurement in mm. Then plot a histogram of the first digit of each 
 measurement to see if the set satisifies Benford's Law (though Benford's Law 
 is more applicable to large numbers)'''
 
+# Multiply the whole dataset of measurements by 10 to get millimetres
 data_wo_class_mm = data_wo_class * 10
+# Convert the dataset to strings
 strdata = data_wo_class_mm.astype(str).copy()
+# Stack the columns to get one continuous series of values
 stacked = strdata.stack().copy()
+# Get the first digit of each value
 first_digit = stacked.str[0]
-first_digit_int = first_digit.astype(int).copy()
+# Convert to a list
+first_digit = first_digit.tolist()
 
+# Define a dictionary keylist and empty dict to store the count of each digit
+digit_keylist = ['1','2','3','4','5','6','7','8','9']
+digit_count_dict = {}
+# Loop over the digits to get an ordered dictionary
+for key in digit_keylist:
+    digit_count_dict[key] = first_digit.count(key)   
+
+# Make a barchart of the dictionary values
 plt.figure() 
-plt.hist(first_digit_int, bins=7)
-plt.savefig('plots/histogram_Benfords_Law.png')
-
+plt.bar(range(len(digit_count_dict)), digit_count_dict.values(), tick_label=
+        list(digit_count_dict.keys()))
+plt.xlabel('First Digit')
+plt.ylabel('Count')
+plt.title('First Digit Count in Iris Dataset')
+fig.savefig('plots/histogram_Benfords_Law.png')
+        
+# Get the number of times 1 is the first digit as percentage of total
+digit1_percent = digit_count_dict['1'] / len(first_digit) * 100
+print(f'1 appears as the first digit in {digit1_percent:.0f}% of the measurements')

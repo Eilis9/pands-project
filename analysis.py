@@ -86,8 +86,8 @@ def make_subdirs(subdir_list):
         # check if it exists aleady, if so delete contents
         if subdir in os.listdir():
 #            Used in development            
-            delete_subfolder_files(subdir)
-#             pass
+#            delete_subfolder_files(subdir)
+             pass
         else:
             # if not - create it
             os.makedirs(subdir)

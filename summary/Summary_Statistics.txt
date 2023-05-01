@@ -5,3 +5,31 @@ Sepal Width     2.00      4.40      3.05        3.00         0.43         0.19
 Petal Length    1.00      6.90      3.76        4.35         1.76         3.11     
 Petal Width     0.10      2.50      1.20        1.30         0.76         0.58     
 
+***************** All data *****************
+              Min (cm)  Max (cm)  Mean (cm)  Median (cm)  StDev (cm)  Variance (cm)
+Sepal Length    4.30      7.90      5.84        5.80         0.83         0.69     
+Sepal Width     2.00      4.40      3.05        3.00         0.43         0.19     
+Petal Length    1.00      6.90      3.76        4.35         1.76         3.11     
+Petal Width     0.10      2.50      1.20        1.30         0.76         0.58     
+
+***************** Iris-setosa *****************
+              Min (cm)  Max (cm)  Mean (cm)  Median (cm)  StDev (cm)  Variance (cm)
+Sepal Length    4.30      5.80      5.01        5.00         0.35         0.12     
+Sepal Width     2.30      4.40      3.42        3.40         0.38         0.15     
+Petal Length    1.00      1.90      1.46        1.50         0.17         0.03     
+Petal Width     0.10      0.60      0.24        0.20         0.11         0.01     
+
+***************** Iris-versicolor *****************
+              Min (cm)  Max (cm)  Mean (cm)  Median (cm)  StDev (cm)  Variance (cm)
+Sepal Length    4.90      7.00      5.94        5.90         0.52         0.27     
+Sepal Width     2.00      3.40      2.77        2.80         0.31         0.10     
+Petal Length    3.00      5.10      4.26        4.35         0.47         0.22     
+Petal Width     1.00      1.80      1.33        1.30         0.20         0.04     
+
+***************** Iris-virginica *****************
+              Min (cm)  Max (cm)  Mean (cm)  Median (cm)  StDev (cm)  Variance (cm)
+Sepal Length    4.90      7.90      6.59        6.50         0.64         0.40     
+Sepal Width     2.20      3.80      2.97        3.00         0.32         0.10     
+Petal Length    4.50      6.90      5.55        5.55         0.55         0.30     
+Petal Width     1.40      2.50      2.03        2.00         0.27         0.08     
+

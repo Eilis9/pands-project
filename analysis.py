@@ -46,7 +46,8 @@ def write_to_file(summary_filename, df_data, heading, dec_format="%.2f"):
 def plot_histograms(data, var):   
         plt.figure()
         sns.histplot(data, x=var, hue="Class", binwidth=0.2, kde=True)
-        plt.savefig(f'plots/histogram_{var}.png')  
+        plt.savefig(f'plots/histogram_{var}.png')
+
 
 # Run pandas correlation method
 def get_corr(data):
@@ -84,11 +85,15 @@ def make_subdirs(subdir_list):
     for subdir in subdir_list:
         # check if it exists aleady, if so delete contents
         if subdir in os.listdir():
+#            Used in development            
             delete_subfolder_files(subdir)
+#             pass
         else:
             # if not - create it
             os.makedirs(subdir)
-  
+
+''' Deleting files was used in development. Deleting directory not desirable - 
+in case of user already having a directory with files.'''
 def delete_subfolder_files(location):
     # delete all files by using wildcard
     location = location + "/*"
@@ -144,29 +149,31 @@ print(f"Summary stats in {summary_filename} and {corr_filename}")
 # ****************************** Plotting ************************************   
 # Generate the pair plot of scatters
 sns.set_theme(style='whitegrid')
-g = sns.pairplot(data, hue="Class", diag_kind="kde")
+plt.figure()
+g=sns.pairplot(data, hue="Class", diag_kind="kde")
 g.map_lower(sns.kdeplot, levels=7, color=".2")
-g.savefig("plots/pairplot.png")
+plt.savefig("plots/scatter_pairplot.png")
 
 # Generate the histograms for the 4 iris measurement variables
 for var in variables_wo_class:
     plot_histograms(data, var)   
-    
+   
 # Plot histogram for the full dataset    
 plt.figure()
-sns.histplot(data_wo_class, binwidth=0.2, kde=True)
+g = sns.histplot(data_wo_class, binwidth=0.2, kde=True)
+g.set_xlabel('Measurement (cm)')
 plt.savefig('plots/histogram_all_data.png')  
 
 sns.set_theme(style="ticks", )
 
 # # Plot Length v Width for Sepal and Petal with linear regression fit
-fig = plt.figure()
+plt.figure()
 sns.lmplot(x ='Petal Width', y ='Petal Length', data = data, hue="Class")
-fig.savefig("plots/petal_scatter.png")
-
-fig = plt.figure()
+plt.savefig("plots/scatter_petal.png")
+plt.figure()
 sns.lmplot(x ='Sepal Width', y ='Sepal Length', data = data, hue="Class")
-fig.savefig("plots/sepal_scatter.png")
+plt.savefig("plots/scatter_sepal.png")
+
 
 # Create a figure with 4 histogram subplots showing each variable
 sns.set_theme(style='white')
@@ -176,7 +183,8 @@ sns.histplot(data, x="Petal Width", hue="Class", binwidth=0.2, kde=True, ax=ax[0
 sns.histplot(data, x="Sepal Length", hue="Class", binwidth=0.2, kde=True, ax=ax[1,0])
 sns.histplot(data, x="Sepal Width", hue="Class", binwidth=0.2, kde=True, ax=ax[1,1])
 fig.tight_layout()
-fig.savefig("plots/4_plot_histogram.png")
+plt.savefig("plots/histogram_4plot.png")
+
 print("Plots in /plots")
 
 # ******************************* Further Analysis *****************************
@@ -193,9 +201,9 @@ for iris in class_names:
      fig.suptitle(iris, fontsize=16)
      axis_list[count].legend(['Measured','Rolling Mean', 'Rolling lin_fit', 'Mean'])
      plt.tight_layout()    
-     fig.savefig(f'plots/rolling_mean_{iris}.png') 
-     
-     
+     plt.savefig(f'plots/line_RollingMean_{iris}.png')   
+
+# Create variable 'size'     
 iris_size = data['Sepal Width'] * data['Sepal Length'] + \
             data['Petal Width'] * data['Petal Length']     
 # Create a new dataframe for this makey-uppy variable            
@@ -212,8 +220,7 @@ for iris in class_names:
     plot_rollingmean(data_iris_variable, 5, iris, "Size", fig, axs)
     fig.suptitle(iris, fontsize=16)
     axs.legend(['Measured','Rolling Mean', 'Rolling lin_fit', 'Mean'])
-    fig.savefig(f'plots/rolling_mean_size_{iris}.png')   
-
+    plt.savefig(f'plots/line_RollingMeanSize_{iris}.png')
 
 ''' Take all the measurements in the data set and multiply by 10 to get the 
 measurement in mm. Then plot a histogram of the first digit of each 
@@ -245,8 +252,9 @@ plt.bar(range(len(digit_count_dict)), digit_count_dict.values(), tick_label=
 plt.xlabel('First Digit')
 plt.ylabel('Count')
 plt.title('First Digit Count in Iris Dataset')
-fig.savefig('plots/histogram_Benfords_Law.png')
+plt.savefig('plots/barplot_BenfordsLaw.png')
         
 # Get the number of times 1 is the first digit as percentage of total
 digit1_percent = digit_count_dict['1'] / len(first_digit) * 100
 print(f'1 appears as the first digit in {digit1_percent:.0f}% of the measurements')
+print('Analysis Complete')

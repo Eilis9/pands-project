@@ -32,8 +32,8 @@ def get_summary_stats(data, item=''):
     return summary_df
 
 # Function to write a summary of data to a file 
-def write_to_file(summary_filename, df_data, heading, dec_format="%.2f"):   
-    with open (summary_filename, 'at') as f:
+def write_to_file(summary_filename, df_data, heading, mode, dec_format="%.2f"):   
+    with open (summary_filename, mode) as f:
         # to_string for nice formatting for the text file
         df_summary_asstr = df_data.to_string(float_format=dec_format, 
                                                 justify='center')
@@ -110,6 +110,9 @@ variables = ["Sepal Length", "Sepal Width", "Petal Length",
 variables_wo_class = variables[:-1]
 # Assign the header to the data
 data.columns = variables
+# Output the size of the dataframe and then the first 5 lines to get sense of the data
+print(f'Dataframe shape is (rows, columns): {data.shape}\n')
+print(f'First 5 lines:\n{data.head(5)}\n')      
 # Check for any missing values in the dataframe and sum up on rows and columns
 print(f'{data.isna().sum().sum()} missing values in dataframe')
 # get the different classifications
@@ -125,9 +128,9 @@ make_subdirs(['summary', 'plots'])
 # ********************** Outputting the summary stats ************************    
 # Get the statistics for the whole dataset and write to file
 df_summary_all = get_summary_stats(data.drop(columns="Class"))
-write_to_file(summary_filename, df_summary_all, "All data")
+write_to_file(summary_filename, df_summary_all, "All data", "wt")
 df_corr_all = get_corr(data)
-write_to_file(corr_filename, df_corr_all, "All data", "%.3f")
+write_to_file(corr_filename, df_corr_all, "All data", "wt", "%.3f")
 
 # Get summary stats and corr for each class of iris and write to text file
 for item in class_names:
@@ -137,9 +140,9 @@ for item in class_names:
     iris_data.drop(columns = "Class", inplace=True) 
     # Get the stats and write to file
     df_summary = get_summary_stats(iris_data)
-    write_to_file(summary_filename, df_summary, item)
+    write_to_file(summary_filename, df_summary, item, "at")
     df_corr =  get_corr(iris_data)
-    write_to_file(corr_filename, df_corr, item, "%.2f")   
+    write_to_file(corr_filename, df_corr, item, "at", "%.2f")   
 
 # Get the pandas dataframe of correlation stats for the whole dataset
 df_corr = pd.DataFrame()

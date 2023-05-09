@@ -5,13 +5,6 @@ Sepal Width      -0.109        1.000        -0.421       -0.357
 Petal Length      0.872       -0.421         1.000        0.963   
 Petal Width       0.818       -0.357         0.963        1.000   
 
-***************** All data *****************
-              Sepal Length  Sepal Width  Petal Length  Petal Width
-Sepal Length      1.000       -0.109         0.872        0.818   
-Sepal Width      -0.109        1.000        -0.421       -0.357   
-Petal Length      0.872       -0.421         1.000        0.963   
-Petal Width       0.818       -0.357         0.963        1.000   
-
 ***************** Iris-setosa *****************
               Sepal Length  Sepal Width  Petal Length  Petal Width
 Sepal Length      1.00         0.75          0.26         0.28    

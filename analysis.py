@@ -13,6 +13,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from numpy.polynomial import Polynomial as P
+# Import the datasets module from sklearn to compare the in-built iris dataset
+# with the UCI basecase dataset 
+from sklearn import datasets
 
 summary_filename = "summary/summary_statistics.txt"
 corr_filename = "summary/correlation.txt"
@@ -260,4 +263,46 @@ plt.savefig('plots/barplot_BenfordsLaw.png')
 # Get the number of times 1 is the first digit as percentage of total
 digit1_percent = digit_count_dict['1'] / len(first_digit) * 100
 print(f'1 appears as the first digit in {digit1_percent:.0f}% of the measurements')
+
+''' Take the UCI Bezdek iris dataset (also given in the UCI repository) and
+compare to the "basecase" data which was analysed above. Also compare basecase to
+the sklearn bundled iris dataset'''
+
+# Read in BezdekIris (this is the 2nd dataset included in the UCI repository)
+bezdek_iris = pd.read_csv('data/bezdekIris.data', header=None)
+bezdek_iris.columns = variables
+# Do a comparison between the basecase data and the Bezdek Iris data
+print("Comparison between the basecase UCI data and the UCI Bezdek data:")
+print(data.compare(bezdek_iris))
+
+# Compare the sklearn dataset with basecase
+# Load the sklearn iris dataset - bunch object with different types
+sklearn_iris_bunch = datasets.load_iris()
+# Get the data 
+sklearn_iris = pd.DataFrame(sklearn_iris_bunch.data)
+# Data preview - 
+#print(sklearn_iris)
+#print(sklearn_iris_bunch)
+# check if data layout is the same as the UCI datasets - it is
+# so can assign the same columns index
+print(sklearn_iris_bunch.feature_names) 
+print(variables_wo_class)
+# Put the dataframe together using the same columns headers to aid comparison
+sklearn_iris.columns = variables_wo_class
+# Add the class column (which is .target)
+sklearn_iris['Class'] = sklearn_iris_bunch.target
+# Class is a digit with the reference in .target_names
+print(sklearn_iris.head(5))
+print(sklearn_iris_bunch.target_names)
+# Set up a reference dictionary to replace Class data with the iris name
+ref_dict = {}
+for i, row in enumerate(sklearn_iris_bunch.target_names.tolist()):
+    ref_dict[i] = "Iris-" + row
+sklearn_iris['Class']  = sklearn_iris['Class'].replace(ref_dict)
+# Compare the sklearn dataset with the basecase
+print("Comparison between the basecase UCI data and sklearn dataset:")
+print(data.compare(sklearn_iris))
+
+
+
 print('Analysis Complete')

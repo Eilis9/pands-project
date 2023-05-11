@@ -46,11 +46,11 @@ def write_to_file(summary_filename, df_data, heading, mode, dec_format="%.2f"):
         f.write('\n')
 
 # Function to plot seaborn histograms of data 
-def plot_histograms(data, var):   
+def plot_histograms(data, var, title):   
         plt.figure()
-        sns.histplot(data, x=var, hue="Class", binwidth=0.2, kde=True)
+        g = sns.histplot(data, x=var, hue="Class", binwidth=0.2, kde=True)
+        g.set(title = title)
         plt.savefig(f'plots/histogram_{var}.png')
-
 
 # Run pandas correlation method
 def get_corr(data):
@@ -86,7 +86,7 @@ def plot_rollingmean(data, window, iris, var, fig, axis):
 def make_subdirs(subdir_list):
     # loop over the subdirs to be created
     for subdir in subdir_list:
-        # check if it exists aleady, if so delete contents
+        # check if it exists aleady
         if subdir in os.listdir():
 #            Used in development            
 #            delete_subfolder_files(subdir)
@@ -162,11 +162,12 @@ plt.savefig("plots/scatter_pairplot.png")
 
 # Generate the histograms for the 4 iris measurement variables
 for var in variables_wo_class:
-    plot_histograms(data, var)   
+    plot_histograms(data, var, var)   
    
 # Plot histogram for the full dataset    
 plt.figure()
 g = sns.histplot(data_wo_class, binwidth=0.2, kde=True)
+g.set(title = "Iris dataset - all species")
 g.set_xlabel('Measurement (cm)')
 plt.savefig('plots/histogram_all_data.png')  
 

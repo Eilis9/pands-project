@@ -122,7 +122,7 @@ print(f'{data.isna().sum().sum()} missing values in dataframe')
 class_names = data["Class"].unique()
 # dataframe without class column
 data_wo_class = data.drop(columns="Class").copy()
-print("Data read in")
+print("Data read in complete")
 
 # ***************************** Set up subdirs ******************************
 # Set up the subdirectors for the summary stat files and plots
@@ -294,15 +294,25 @@ sklearn_iris['Class'] = sklearn_iris_bunch.target
 # Class is a digit with the reference in .target_names
 print(sklearn_iris.head(5))
 print(sklearn_iris_bunch.target_names)
+
 # Set up a reference dictionary to replace Class data with the iris name
 ref_dict = {}
 for i, row in enumerate(sklearn_iris_bunch.target_names.tolist()):
     ref_dict[i] = "Iris-" + row
 sklearn_iris['Class']  = sklearn_iris['Class'].replace(ref_dict)
 # Compare the sklearn dataset with the basecase
-print("Comparison between the basecase UCI data and sklearn dataset:")
+print("Comparison between the basecase UCI data and sklearn dataset:\n")
 print(data.compare(sklearn_iris))
+# Compare the sklearn dataset with the basecase
+print("\n\nComparison between the Bezdek Iris dataset and sklearn dataset:")
+print(bezdek_iris.compare(sklearn_iris))
+# Finally check the seaborn iris dataset
+seaborn_iris = sns.load_dataset('iris')
+print(seaborn_iris.head(5))
+# Format to make the headers and class the same
+seaborn_iris.columns = data.columns
+seaborn_iris['Class'] = "Iris-" + seaborn_iris['Class']
+print("\nFinally check the Seaborn dataset against the Bezdek iris dataset")
+print(seaborn_iris.compare(bezdek_iris))
 
-
-
-print('Analysis Complete')
+print('\nAnalysis Complete')

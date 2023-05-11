@@ -21,6 +21,8 @@ from sklearn import datasets
 summary_filename = "data_summary/summary_statistics.txt"
 corr_filename = "data_summary/correlation.txt"
 plots_folder = "data_plots/"
+summary_folder = "data_summary/"
+
 # ************************ Function definitions ***************************
 # Function to calculate the basic statistics of a dataset
 def get_summary_stats(data, item=''):
@@ -127,7 +129,7 @@ print("Data read in complete")
 
 # ***************************** Set up subdirs ******************************
 # Set up the subdirectors for the summary stat files and plots
-make_subdirs(['data_summary', 'data_plots'])
+make_subdirs([summary_folder[:-1], plots_folder[:-1]])
 
 # ********************** Outputting the summary stats ************************    
 # Get the statistics for the whole dataset and write to file

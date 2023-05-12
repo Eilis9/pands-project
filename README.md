@@ -14,7 +14,7 @@ Software Used:
 - Jupyter Notebook 6.4.12   
  </p>
 
-The analysis for the project is in analysis.py and in analysis.ipynb. All references used are given in the Jupyter Notebook. The Jupyter Notebook should be downloaded and run locally.
+The analysis for the project is in analysis.py and in analysis.ipynb. All references used are given in the Jupyter Notebook. The Jupyter Notebook should be downloaded along with the /img folder and run locally.
  - - -
 
 

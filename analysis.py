@@ -17,11 +17,11 @@ from numpy.polynomial import Polynomial as P
 # with the UCI basecase dataset 
 from sklearn import datasets
 
-# Define the subdirectories for the script outputs
-summary_filename = "data_summary/summary_statistics.txt"
-corr_filename = "data_summary/correlation.txt"
-plots_folder = "data_plots/"
-summary_folder = "data_summary/"
+# Define the subdirectories and filenames for the script outputs
+plots_folder = "data_plots"
+summary_folder = "data_summary"
+summary_filename = "summary_statistics.txt"
+corr_filename = "correlation.txt"
 
 # ************************ Function definitions ***************************
 # Function to calculate the basic statistics of a dataset
@@ -31,10 +31,11 @@ def get_summary_stats(data, item=''):
     summary_df['Min (cm)'] = data.min()
     summary_df['Max (cm)'] = data.max()
     summary_df['Mean (cm)'] = data.mean()
+    summary_df['25% quartile'] = data.quantile(0.25)      
     summary_df['Median (cm)'] = data.median()
+    summary_df['75% quartile'] = data.quantile(0.75)    
     summary_df['StDev (cm)'] = data.std()
-    summary_df['Variance (cm)'] = data.var() 
-    
+    summary_df['Variance (cm)'] = data.var()         
     return summary_df
 
 # Function to write a summary of data to a file 
@@ -53,7 +54,7 @@ def plot_histograms(data, var, title):
         plt.figure()
         g = sns.histplot(data, x=var, hue="Class", binwidth=0.2, kde=True)
         g.set(title = title)
-        plt.savefig(f'{plots_folder}histogram_{var}.png')
+        plt.savefig(f'{plots_folder}/histogram_{var}.png')
 
 # Run pandas correlation method
 def get_corr(data):
@@ -129,14 +130,14 @@ print("Data read in complete")
 
 # ***************************** Set up subdirs ******************************
 # Set up the subdirectors for the summary stat files and plots
-make_subdirs([summary_folder[:-1], plots_folder[:-1]])
+make_subdirs([summary_folder, plots_folder])
 
 # ********************** Outputting the summary stats ************************    
 # Get the statistics for the whole dataset and write to file
 df_summary_all = get_summary_stats(data.drop(columns="Class"))
-write_to_file(summary_filename, df_summary_all, "All data", "wt")
+write_to_file(f'{summary_folder}/{summary_filename}', df_summary_all, "All data", "wt")
 df_corr_all = get_corr(data)
-write_to_file(corr_filename, df_corr_all, "All data", "wt", "%.3f")
+write_to_file(f'{summary_folder}/{corr_filename}', df_corr_all, "All data", "wt", "%.3f")
 
 # Get summary stats and corr for each class of iris and write to text file
 for item in class_names:
@@ -146,35 +147,40 @@ for item in class_names:
     iris_data.drop(columns = "Class", inplace=True) 
     # Get the stats and write to file
     df_summary = get_summary_stats(iris_data)
-    write_to_file(summary_filename, df_summary, item, "at")
+    write_to_file(f'{summary_folder}/{summary_filename}', df_summary, item, "at")
     df_corr =  get_corr(iris_data)
-    write_to_file(corr_filename, df_corr, item, "at", "%.2f")   
+    write_to_file(f'{summary_folder}/{corr_filename}', df_corr, item, "at", "%.2f")   
 
 # Get the pandas dataframe of correlation stats for the whole dataset
 df_corr = pd.DataFrame()
 df_corr = get_corr(data_wo_class)
-print(f"Summary stats in {summary_filename} and {corr_filename}")
+print(f'Summary stats and correlation in /{summary_folder}')
 
 # ******************************* Plotting ***********************************
-# Generate a plot for the boxplots (3 subplots side by side)
+# Set up boxplot fig with 3 subplots side by side
 fig, axs = plt.subplots(1, 3, figsize=(20, 8))
-# One y axis label is enough
-axs[0].set_ylabel('Measurement (cm)')
-for ax, iris in enumerate(class_names):   
+# one y axis label is enough
+axs[0].set_ylabel('Measurement (cm)', fontsize=16)
+# [57][58]
+ticks=np.arange(0,9)
+for ax, iris in enumerate(class_names):
     data_iris = data[data["Class"] == iris].drop(columns = 'Class').copy()
-    # Set the y axis limits to be the same for all three subplots
+    # Same y axis limit for all 3 variables for comparison
     axs[ax].set_ylim(0, 8)
-    axs[ax].boxplot(data_iris, labels=variables_wo_class)
-    axs[ax].set_title(iris)   
-fig.tight_layout()    
-plt.savefig('data_plots/boxplot_classes.png')   
+    axs[ax].boxplot(data_iris, whis=10)
+    axs[ax].set_xticklabels(variables_wo_class, fontsize=16)
+    axs[ax].set_title(iris, fontsize=18)
+    axs[ax].grid(visible=True, which='both', axis='both')
+#    axs[ax].grid()
+fig.tight_layout() 
+plt.savefig(f'{plots_folder}/boxplot_classes.png')   
 
 # Generate the pair plot of scatters
 sns.set_theme(style='whitegrid')
 plt.figure()
 g=sns.pairplot(data, hue="Class", diag_kind="kde")
 g.map_lower(sns.kdeplot, levels=7, color=".2")
-plt.savefig(f"{plots_folder}scatter_pairplot.png")
+plt.savefig(f'{plots_folder}/scatter_pairplot.png')
 
 # Generate the histograms for the 4 iris measurement variables
 for var in variables_wo_class:
@@ -185,17 +191,17 @@ plt.figure()
 g = sns.histplot(data_wo_class, binwidth=0.2, kde=True)
 g.set(title = "Iris dataset - all species")
 g.set_xlabel('Measurement (cm)')
-plt.savefig(f'{plots_folder}histogram_all_data.png')  
+plt.savefig(f'{plots_folder}/histogram_all_data.png')  
 
 sns.set_theme(style="ticks", )
 
 # # Plot Length v Width for Sepal and Petal with linear regression fit
 plt.figure()
 sns.lmplot(x ='Petal Width', y ='Petal Length', data = data, hue="Class")
-plt.savefig(f"{plots_folder}scatter_petal.png")
+plt.savefig(f'{plots_folder}/scatter_petal.png')
 plt.figure()
 sns.lmplot(x ='Sepal Width', y ='Sepal Length', data = data, hue="Class")
-plt.savefig(f"{plots_folder}scatter_sepal.png")
+plt.savefig(f'{plots_folder}/scatter_sepal.png')
 
 
 # Create a figure with 4 histogram subplots showing each variable
@@ -206,9 +212,9 @@ sns.histplot(data, x="Petal Width", hue="Class", binwidth=0.2, kde=True, ax=ax[0
 sns.histplot(data, x="Sepal Length", hue="Class", binwidth=0.2, kde=True, ax=ax[1,0])
 sns.histplot(data, x="Sepal Width", hue="Class", binwidth=0.2, kde=True, ax=ax[1,1])
 fig.tight_layout()
-plt.savefig(f"{plots_folder}histogram_4plot.png")
+plt.savefig(f'{plots_folder}/histogram_4plot.png')
 
-print(f"Plots in {plots_folder}")
+print(f"Plots in /{plots_folder}")
 
 # ******************************* Further Analysis *****************************
 ''' For each iris type, create a plot with 4 subplots of the measurements with 
@@ -224,7 +230,7 @@ for iris in class_names:
      fig.suptitle(iris, fontsize=16)
      axis_list[count].legend(['Measured','Rolling Mean', 'Rolling lin_fit', 'Mean'])
      plt.tight_layout()    
-     plt.savefig(f'{plots_folder}line_RollingMean_{iris}.png')   
+     plt.savefig(f'{plots_folder}/line_RollingMean_{iris}.png')   
 
 # Create variable 'size'     
 iris_size = data['Sepal Width'] * data['Sepal Length'] + \
@@ -243,7 +249,7 @@ for iris in class_names:
     plot_rollingmean(data_iris_variable, 5, iris, "Size", fig, axs)
     fig.suptitle(iris, fontsize=16)
     axs.legend(['Measured','Rolling Mean', 'Rolling lin_fit', 'Mean'])
-    plt.savefig(f'{plots_folder}line_RollingMeanSize_{iris}.png')
+    plt.savefig(f'{plots_folder}/line_RollingMeanSize_{iris}.png')
 
 ''' Take all the measurements in the data set and multiply by 10 to get the 
 measurement in mm. Then plot a histogram of the first digit of each 
@@ -275,7 +281,7 @@ plt.bar(range(len(digit_count_dict)), digit_count_dict.values(), tick_label=
 plt.xlabel('First Digit')
 plt.ylabel('Count')
 plt.title('First Digit Count in Iris Dataset')
-plt.savefig(f'{plots_folder}barplot_BenfordsLaw.png')
+plt.savefig(f'{plots_folder}/barplot_BenfordsLaw.png')
         
 # Get the number of times 1 is the first digit as percentage of total
 digit1_percent = digit_count_dict['1'] / len(first_digit) * 100

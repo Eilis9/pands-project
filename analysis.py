@@ -155,7 +155,20 @@ df_corr = pd.DataFrame()
 df_corr = get_corr(data_wo_class)
 print(f"Summary stats in {summary_filename} and {corr_filename}")
 
-# ****************************** Plotting ************************************   
+# ******************************* Plotting ***********************************
+# Generate a plot for the boxplots (3 subplots side by side)
+fig, axs = plt.subplots(1, 3, figsize=(20, 8))
+# One y axis label is enough
+axs[0].set_ylabel('Measurement (cm)')
+for ax, iris in enumerate(class_names):   
+    data_iris = data[data["Class"] == iris].drop(columns = 'Class').copy()
+    # Set the y axis limits to be the same for all three subplots
+    axs[ax].set_ylim(0, 8)
+    axs[ax].boxplot(data_iris, labels=variables_wo_class)
+    axs[ax].set_title(iris)   
+fig.tight_layout()    
+plt.savefig('data_plots/boxplot_classes.png')   
+
 # Generate the pair plot of scatters
 sns.set_theme(style='whitegrid')
 plt.figure()
